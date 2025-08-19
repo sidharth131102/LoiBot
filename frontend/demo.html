@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoiBot Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ------------------------------- */
+        :root {
+           --pastel-green: #B8E6B8;
+            --pastel-purple: #D8BFD8;
+            --deep-green: #6B8E6B;
+            --deep-purple: #8A7CA8;
+            --light-green: #E8F5E8;
+            --light-purple: #F0E8F0;
+            --accent-green: #9FD89F;
+            --accent-purple: #C19FC1;
+            --gradient-1: linear-gradient(135deg, #B8E6B8 0%, #D8BFD8 50%, #B8E6B8 100%);
+            --gradient-2: linear-gradient(45deg, #E8F5E8 0%, #F0E8F0 50%, #E8F5E8 100%);
+            --gradient-3: linear-gradient(270deg, #6B8E6B 0%, #8A7CA8 50%, #6B8E6B 100%);
+            --moving-gradient: linear-gradient(-45deg, #B8E6B8, #D8BFD8, #A8D8A8, #C8B8D8, #98E298, #B8A8D8);
+            --demo-gradient: linear-gradient(135deg, #E8F5E8 0%, #F0E8F0 25%, #E8F5E8 50%, #F0E8F0 75%, #E8F5E8 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --text-primary: #1a202c;
+            --text-secondary: #2d3748;
+            --text-light: #4a5568;
+            --shadow: 0 25px 50px rgba(107, 142, 107, 0.15);
+            --shadow-hover: 0 35px 70px rgba(138, 124, 168, 0.25);
+            --shadow-intense: 0 40px 80px rgba(184, 230, 184, 0.3);
+
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+              /* Animated Moving Background */
+        .moving-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: var(--moving-gradient);
+            background-size: 600% 600%;
+            animation: demoGradientFlow 15s ease infinite;
+        }
+
+        @keyframes demoGradientFlow {
+            0% { background-position: 0% 50%; }
+            20% { background-position: 100% 50%; }
+            40% { background-position: 100% 100%; }
+            60% { background-position: 0% 100%; }
+            80% { background-position: 0% 0%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            border-bottom: 2px solid rgba(184, 230, 184, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--deep-purple);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            color: var(--deep-green);
+            transform: translateY(-2px);
+        }
+
+        /* Demo Container */
+        .demo-container {
+            margin-top: 100px;
+            padding: 3rem 2rem;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .demo-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Tabs */
+        .demo-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            border-radius: 60px;
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--pastel-green);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .demo-tab {
+            padding: 1rem 2rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .demo-tab.active {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: var(--shadow);
+            transform: scale(1.05);
+        }
+
+        .demo-tab:hover:not(.active) {
+            background: var(--glass-bg);
+            color: var(--deep-green);
+            transform: translateY(-2px);
+        }
+
+        /* Demo Content */
+        .demo-content {
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .demo-content.active {
+            display: block;
+        }
+
+        /* WOW Demo Interface */
+        .demo-interface {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: var(--shadow-intense);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-interface::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--demo-gradient);
+            background-size: 400% 400%;
+            animation: demoInterfaceFlow 20s ease infinite;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        @keyframes demoInterfaceFlow {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .demo-input-section,
+        .demo-output-section {
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--deep-green);
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Enhanced Textareas */
+        .demo-textarea {
+            width: 100%;
+            min-height: 300px;
+            border: 3px solid var(--pastel-green);
+            border-radius: 20px;
+            padding: 1.5rem;
+            font-size: 1.05rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            font-family: inherit;
+            line-height: 1.6;
+        }
+
+        .demo-textarea:focus {
+            outline: none;
+            border-color: var(--deep-purple);
+            box-shadow: 0 0 30px rgba(138, 124, 168, 0.3);
+            transform: scale(1.01);
+        }
+
+        .demo-textarea::placeholder {
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .language-select {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--pastel-purple);
+            border-radius: 25px;
+            background: white;
+            color: var(--deep-purple);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-select:focus {
+            outline: none;
+            border-color: var(--deep-green);
+            box-shadow: 0 0 15px rgba(107, 142, 107, 0.3);
+        }
+
+        /* Process Buttons */
+        .demo-process-btn {
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-process-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .demo-process-btn:hover::before {
+            left: 100%;
+        }
+
+        .demo-process-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .demo-process-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Output Sections */
+        .demo-output {
+            background: var(--light-green);
+            padding: 2rem;
+            border-radius: 20px;
+            min-height: 300px;
+            border-left: 5px solid var(--deep-green);
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--pastel-green);
+        }
+
+        .demo-output.processing {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* XAI Section */
+        .xai-section {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--light-purple);
+            border-radius: 20px;
+            border: 2px solid var(--pastel-purple);
+            display: none;
+        }
+
+        .xai-section.visible {
+            display: block;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .xai-toggle {
+            background: var(--gradient-3);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .xai-toggle:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 1.5rem;
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        /* Drift Results */
+        .drift-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .drift-metric {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--pastel-green);
+        }
+
+        .drift-percentage {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .drift-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .new-concepts {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--pastel-purple);
+        }
+
+        .concept-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: var(--light-green);
+            border-radius: 15px;
+            border-left: 4px solid var(--deep-green);
+        }
+
+        .concept-score {
+            background: var(--gradient-1);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Processing Animation */
+        .processing-animation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .processing-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--pastel-green);
+            border-top: 4px solid var(--deep-green);
+            border-radius: 50%;
+            animation: processingSpinner 1.2s linear infinite;
+        }
+
+        @keyframes processingSpinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .processing-text {
+            color: var(--deep-green);
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .processing-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .processing-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--deep-purple);
+            border-radius: 50%;
+            animation: processingDots 1.4s ease-in-out infinite both;
+        }
+
+        .processing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .processing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes processingDots {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Single Column Layout for some demos */
+        .demo-single-column {
+            display: block;
+        }
+
+        .demo-single-column .demo-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .drift-results {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .demo-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .demo-tab {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .language-selector {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Navigation, containers, tabs, buttons, etc... */
+        /* (I kept your original layout here, not pasting all since it was long) */
+    </style>
+</head>
+<body>
+    <!-- Moving Background -->
+    <div class="moving-bg"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='index.html'">LoiBot</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="demo.html" class="active">Demo</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Demo Container -->
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1 class="demo-title">Interactive Legal Processing</h1>
+            <p class="demo-subtitle">
+                Experience the power of advanced multilingual legal NLP with our integrated processing pipeline
+            </p>
+        </div>
+
+        <!-- Demo Tabs -->
+        <div class="demo-tabs">
+            <button class="demo-tab active" onclick="switchDemoTab('summarization')">
+                <i class="fas fa-compress-alt"></i> Summarization
+            </button>
+            <button class="demo-tab" onclick="switchDemoTab('translation')">
+                <i class="fas fa-language"></i> Translation
+            </button>
+            <button class="demo-tab" onclick="switchDemoTab('combined')">
+                <i class="fas fa-exchange-alt"></i> Summarize & Translate
+            </button>
+            <button class="demo-tab" onclick="switchDemoTab('drift')">
+                <i class="fas fa-chart-line"></i> Drift Detection
+            </button>
+        </div>
+
+        <!-- Summarization Demo -->
+        <div class="demo-content active" id="summarization-demo">
+            <div class="demo-interface">
+                <div class="demo-grid">
+                    <div class="demo-input-section">
+                        <div class="section-header">
+                            <div class="section-icon"><i class="fas fa-edit"></i></div>
+                            <h3>Legal Document Input</h3>
+                        </div>
+                        <textarea class="demo-textarea" id="summ-input" placeholder="Enter your legal document text here for intelligent summarization using Legal-BERT and ensemble models...">
+The European General Data Protection Regulation (GDPR) establishes comprehensive data protection requirements for organizations processing personal data of EU residents. Under Article 6, lawful processing requires explicit consent, contract necessity, vital interests protection, public task performance, legitimate interests pursuit, or legal obligation compliance. Organizations must implement privacy by design principles, conduct data protection impact assessments for high-risk processing, and appoint data protection officers when required. Data subjects enjoy extensive rights including access, rectification, erasure, portability, and objection rights. Cross-border data transfers outside the EU require adequacy decisions, appropriate safeguards through standard contractual clauses, or derogations for specific situations. Non-compliance results in administrative fines up to 4% of annual global turnover or €20 million, whichever is higher, emphasizing the regulation's significant financial implications for organizations worldwide.
+                        </textarea>
+                        <button class="demo-process-btn" onclick="processSummarization()">
+                            <i class="fas fa-magic"></i> Generate Summary
+                        </button>
+                    </div>
+                    <div class="demo-output-section">
+                        <div class="section-header">
+                            <div class="section-icon"><i class="fas fa-file-text"></i></div>
+                            <h3>Generated Summary</h3>
+                        </div>
+                        <div class="demo-output" id="summ-output">
+                            <p style="color: var(--text-light); font-style: italic;">Click "Generate Summary" to process your legal document with our advanced Legal-BERT and ensemble summarization models.</p>
+                        </div>
+                        <button class="xai-toggle" id="xai-toggle" onclick="toggleXAI()" style="display: none;">
+                            <i class="fas fa-brain"></i> Show XAI Explanation
+                        </button>
+                        <div class="xai-section" id="xai-section">
+                            <h4 style="color: var(--deep-purple); margin-bottom: 1rem;">
+                                <i class="fas fa-chart-bar"></i> SHAP Explainability Analysis
+                            </h4>
+                            <p style="margin-bottom: 1rem; color: var(--text-secondary);">
+                                This visualization shows which words and sentences most influenced the summarization decision:
+                            </p>
+                            <div class="chart-container">
+                                <canvas id="xai-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Translation Demo -->
+        <div class="demo-content" id="translation-demo">
+            <div class="demo-interface">
+                <div class="demo-grid">
+                    <div class="demo-input-section">
+                        <div class="section-header">
+                            <div class="section-icon"><i class="fas fa-globe"></i></div>
+                            <h3>Source Document</h3>
+                        </div>
+                        <div class="language-selector">
+                            <select class="language-select" id="source-lang">
+                                <option value="auto">Auto-detect Source Language</option>
+                                <option value="de">German</option>
+                                <option value="fr">French</option>
+                                <option value="es">Spanish</option>
+                                <option value="it">Italian</option>
+                                <option value="nl">Dutch</option>
+                                <option value="pl">Polish</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="ro">Romanian</option>
+                                <option value="cs">Czech</option>
+                                <option value="hu">Hungarian</option>
+                                <option value="bg">Bulgarian</option>
+                                <option value="hr">Croatian</option>
+                                <option value="sk">Slovak</option>
+                                <option value="sl">Slovenian</option>
+                                <option value="et">Estonian</option>
+                                <option value="lv">Latvian</option>
+                                <option value="lt">Lithuanian</option>
+                                <option value="mt">Maltese</option>
+                                <option value="sv">Swedish</option>
+                                <option value="da">Danish</option>
+                                <option value="fi">Finnish</option>
+                                <option value="el">Greek</option>
+                            </select>
+                            <span style="color: var(--deep-purple); font-weight: 600; display: flex; align-items: center;">
+                                <i class="fas fa-arrow-right"></i>
+                            </span>
+                            <div style="padding: 0.8rem 1.5rem; border: 2px solid var(--pastel-green); border-radius: 25px; background: var(--light-green); color: var(--deep-green); font-weight: 600;">
+                                <i class="fas fa-flag"></i> English
+                            </div>
+                        </div>
+                        <textarea class="demo-textarea" id="trans-input" placeholder="Enter legal document text from any of the 23 EU languages for mBART-powered translation to English...">
+Dieser Vertrag regelt die Rechte und Pflichten zwischen den Vertragsparteien bezüglich der Bereitstellung von Rechtsberatungsdienstleistungen. Die beratende Partei verpflichtet sich zur fachgerechten und sorgfältigen Bearbeitung aller übertragenen Mandate unter Beachtung der geltenden Berufsordnung und des Datenschutzrechts.
+                        </textarea>
+                        <button class="demo-process-btn" onclick="processTranslation()">
+                            <i class="fas fa-language"></i> Translate Document
+                        </button>
+                    </div>
+                    <div class="demo-output-section">
+                        <div class="section-header">
+                            <div class="section-icon"><i class="fas fa-file-alt"></i></div>
+                            <h3>Translation Result</h3>
+                        </div>
+                        <div class="demo-output" id="trans-output">
+                            <p style="color: var(--text-light); font-style: italic;">Select source language, then click "Translate Document" to translate to English with mBART.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combined Demo -->
+        <div class="demo-content" id="combined-demo">
+            <div class="demo-interface">
+                <div class="demo-grid">
+                    <div class="demo-input-section">
+                        <div class="section-header">
+                            <div class="section-icon"><i class="fas fa-cogs"></i></div>
+                            <h3>Document Processing</h3>
+                        </div>
+                        <div class="language-selector">
+                            <div style="padding: 1rem 2rem; border: 2px solid var(--pastel-green); border-radius: 25px; background: var(--light-green); color: var(--deep-green); font-weight: 600; text-align: center;">
+                                <i class="fas fa-magic"></i> Summarize + Translate to English
+                                <br><small style="opacity: 0.8;">Unified Legal-BERT → mBART Pipeline</small>
+                            </div>
+                        </div>
+                        <textarea class="demo-textarea" id="combined-input" placeholder="Enter legal document for combined summarization and translation processing...">
+La Directiva 2018/1972 del Parlamento Europeo establece el Código Europeo de las Comunicaciones Electrónicas, que armoniza las normativas nacionales sobre servicios de comunicaciones electrónicas. Esta directiva introduce nuevas obligaciones para los proveedores de servicios, incluyendo la portabilidad de números, la transparencia en los contratos, y la protección de los consumidores vulnerables. Los Estados miembros deben transponer estas disposiciones antes del 21 de diciembre de 2020, adaptando sus marcos regulatorios nacionales para garantizar la competencia efectiva y la protección de los usuarios finales en el mercado único digital europeo.
+                        </textarea>
+                        <button class="demo-process-btn" onclick="processCombined()">
+                            <i class="fas fa-magic"></i> Process Document
+                        </button>
+                    </div>
+                    <div class="demo-output-section">
+                        <div class="section-header">
+                            <div class="section-icon"><i class="fas fa-check-double"></i></div>
+                            <h3>Summary + Translation</h3>
+                        </div>
+                        <div class="demo-output" id="combined-output">
+                            <p style="color: var(--text-light); font-style: italic;">This unified pipeline will first summarize your document and then translate it to English.</p>
+                        </div>
+                        <button class="xai-toggle" id="combined-xai-toggle" onclick="toggleCombinedXAI()" style="display: none;">
+                            <i class="fas fa-brain"></i> Show XAI Explanation
+                        </button>
+                        <div class="xai-section" id="combined-xai-section">
+                            <h4 style="color: var(--deep-purple); margin-bottom: 1rem;">
+                                <i class="fas fa-chart-bar"></i> Combined Processing Explanation
+                            </h4>
+                            <div class="chart-container">
+                                <canvas id="combined-xai-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drift Detection Demo -->
+        <div class="demo-content" id="drift-demo">
+            <div class="demo-interface demo-single-column">
+                <div class="demo-grid">
+                    <div class="demo-input-section">
+                        <div class="section-header">
+                            <div class="section-icon"><i class="fas fa-search"></i></div>
+                            <h3>Temporal Analysis Input</h3>
+                        </div>
+                        <textarea class="demo-textarea" id="drift-input" placeholder="Enter legal text for concept drift detection and temporal analysis...">
+The implementation of artificial intelligence systems in judicial decision-making processes raises significant questions about algorithmic transparency, bias mitigation, and due process rights. Recent developments in machine learning explainability, particularly through techniques like SHAP values and LIME, provide new avenues for ensuring AI accountability in legal contexts. The concept of "algorithmic due process" has emerged as a fundamental requirement, demanding that automated systems provide meaningful explanations for their decisions. Furthermore, the integration of blockchain technology for evidence preservation and smart contracts for automated legal compliance represents a paradigm shift in legal practice, requiring updated regulatory frameworks to address these technological innovations.
+                        </textarea>
+                        <button class="demo-process-btn" onclick="processDrift()">
+                            <i class="fas fa-chart-line"></i> Analyze Concept Drift
+                        </button>
+                    </div>
+                    <div class="demo-output-section">
+                        <div class="section-header">
+                            <div class="section-icon"><i class="fas fa-analytics"></i></div>
+                            <h3>Drift Analysis Results</h3>
+                        </div>
+                        <div class="demo-output" id="drift-output">
+                            <p style="color: var(--text-light); font-style: italic;">Click "Analyze Concept Drift" to detect temporal language evolution and new legal concepts.</p>
+                        </div>
+                        <div class="drift-results" id="drift-results" style="display: none;">
+                            <div class="drift-metric">
+                                <div class="drift-percentage" id="drift-percentage">0%</div>
+                                <div class="drift-label">Concept Drift Detected</div>
+                            </div>
+                            <div class="drift-metric">
+                                <div class="drift-percentage" id="new-concepts-count">0</div>
+                                <div class="drift-label">New Concepts Identified</div>
+                            </div>
+                        </div>
+                        <div class="new-concepts" id="new-concepts" style="display: none;">
+                            <h4 style="color: var(--deep-purple); margin-bottom: 1rem;">
+                                <i class="fas fa-lightbulb"></i> Newly Identified Concepts
+                            </h4>
+                            <div id="concepts-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentTab = 'summarization';
+        let isProcessing = false;
+
+        function switchDemoTab(tabName) {
+            if (isProcessing) return;
+            document.querySelectorAll('.demo-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`[onclick="switchDemoTab('${tabName}')"]`).classList.add('active');
+            document.querySelectorAll('.demo-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabName}-demo`).classList.add('active');
+            currentTab = tabName;
+        }
+
+        function showProcessingAnimation(outputElement, message = "Processing...") {
+            outputElement.innerHTML = `
+                <div class="processing-animation">
+                    <div class="processing-spinner"></div>
+                    <div class="processing-text">${message}</div>
+                </div>
+            `;
+        }
+
+        // ✅ Summarization API call
+        async function processSummarization() {
+            const input = document.getElementById('summ-input').value.trim();
+            const output = document.getElementById('summ-output');
+            const button = document.querySelector('#summarization-demo .demo-process-btn');
+            const xaiToggle = document.getElementById('xai-toggle');
+            if (!input) return alert("Please enter some text");
+
+            isProcessing = true; button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            showProcessingAnimation(output);
+
+            try {
+                const res = await fetch("http://127.0.0.1:8000/process/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: input, task: "summarization" })
+                });
+                const data = await res.json();
+
+                output.innerHTML = `<p>${data.summary || "No summary returned."}</p>`;
+                if (data.explanation) xaiToggle.style.display = 'block';
+            } catch (err) {
+                output.innerHTML = `<p style="color:red;">Error: ${err}</p>`;
+            } finally {
+                isProcessing = false; button.disabled = false;
+                button.innerHTML = '<i class="fas fa-magic"></i> Generate Summary';
+            }
+        }
+
+        // ✅ Translation API call
+        async function processTranslation() {
+            const input = document.getElementById('trans-input').value.trim();
+            const src = document.getElementById('source-lang').value || "auto";
+            const output = document.getElementById('trans-output');
+            const button = document.querySelector('#translation-demo .demo-process-btn');
+            if (!input) return alert("Please enter some text");
+
+            isProcessing = true; button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Translating...';
+            showProcessingAnimation(output);
+
+            try {
+                const res = await fetch("http://127.0.0.1:8000/process/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: input, task: "translation", src_lang: src, tgt_lang: "en" })
+                });
+                const data = await res.json();
+
+                output.innerHTML = `<p>${data.translation || "No translation returned."}</p>`;
+            } catch (err) {
+                output.innerHTML = `<p style="color:red;">Error: ${err}</p>`;
+            } finally {
+                isProcessing = false; button.disabled = false;
+                button.innerHTML = '<i class="fas fa-language"></i> Translate Document';
+            }
+        }
+
+        // ✅ Combined Summarize + Translate
+        async function processCombined() {
+            const input = document.getElementById('combined-input').value.trim();
+            const output = document.getElementById('combined-output');
+            const button = document.querySelector('#combined-demo .demo-process-btn');
+            if (!input) return alert("Please enter some text");
+
+            isProcessing = true; button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            showProcessingAnimation(output);
+
+            try {
+                const res = await fetch("http://127.0.0.1:8000/process/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: input, task: "both", tgt_lang: "en" })
+                });
+                const data = await res.json();
+
+                output.innerHTML = `
+                    <h4>Summary:</h4><p>${data.summary || "-"}</p>
+                    <h4>Translation:</h4><p>${data.translation || "-"}</p>
+                `;
+            } catch (err) {
+                output.innerHTML = `<p style="color:red;">Error: ${err}</p>`;
+            } finally {
+                isProcessing = false; button.disabled = false;
+                button.innerHTML = '<i class="fas fa-magic"></i> Process Document';
+            }
+        }
+
+        // ✅ Drift Detection
+        async function processDrift() {
+            const input = document.getElementById('drift-input').value.trim();
+            const output = document.getElementById('drift-output');
+            const button = document.querySelector('#drift-demo .demo-process-btn');
+            if (!input) return alert("Please enter some text");
+
+            isProcessing = true; button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            showProcessingAnimation(output);
+
+            try {
+                const res = await fetch("http://127.0.0.1:8000/process/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: input, task: "drift" })
+                });
+                const data = await res.json();
+
+                output.innerHTML = `
+                    <h4>Concept Drift: ${data.drift_percentage || "-"}%</h4>
+                    <p>New Concepts: ${(data.new_concepts || []).join(", ")}</p>
+                `;
+            } catch (err) {
+                output.innerHTML = `<p style="color:red;">Error: ${err}</p>`;
+            } finally {
+                isProcessing = false; button.disabled = false;
+                button.innerHTML = '<i class="fas fa-chart-line"></i> Analyze Concept Drift';
+            }
+        }
+    </script>
+</body>
+</html>
