@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us – LoiBot</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #eef2ff, #fdf4ff);
+      color: #1f2937;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    header nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #374151;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    header nav a:hover {
+      color: #6366f1;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+    .contact-section h2 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .contact-section p {
+      font-size: 16px;
+      color: #4b5563;
+      margin-bottom: 50px;
+    }
+
+    /* Contact Cards */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+    .contact-card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .contact-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+    }
+    .contact-card i {
+      font-size: 36px;
+      margin-bottom: 16px;
+      color: #6366f1;
+    }
+    .contact-card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+    .contact-card p, .contact-card a {
+      font-size: 14px;
+      color: #4b5563;
+      text-decoration: none;
+    }
+    .contact-card a:hover {
+      color: #6366f1;
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #6b7280;
+      background: #f9fafb;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>LoiBot</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/demo">Demo</a>
+      <a href="#">Docs</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Contact Section -->
+  <section class="contact-section">
+    <h2>Get in Touch</h2>
+    <p>We’d love to hear from you. Choose a way to reach us!</p>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <i class="fa-solid fa-envelope"></i>
+        <h3>Email</h3>
+        <p><a href="mailto:loibot.help@gmail.com">loibot.help@gmail.com</a></p>
+      </div>
+      <div class="contact-card">
+        <i class="fa-solid fa-phone"></i>
+        <h3>Phone</h3>
+        <p>+91 98765 43210</p>
+      </div>
+      <div class="contact-card">
+        <i class="fa-solid fa-location-dot"></i>
+        <h3>Address</h3>
+        <p>Kochi, Kerala, India</p>
+      </div>
+      <div class="contact-card">
+        <i class="fa-brands fa-linkedin"></i>
+        <h3>LinkedIn</h3>
+        <p><a href="#">linkedin.com/company/loibot</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 LoiBot – All rights reserved.
+  </footer>
+</body>
+</html>
