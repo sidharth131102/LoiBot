@@ -6,8 +6,8 @@ python-dotenv==1.0.1
 
 # ----------------- Transformers & Models -----------------
 torch==2.5.1
-transformers==4.41.2
-sentence-transformers==2.2.2
+transformers==4.45.2
+sentence-transformers==2.6.1
 
 # ----------------- NLP & Utils -----------------
 langdetect==1.0.9
